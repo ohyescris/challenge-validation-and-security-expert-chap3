@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,14 +26,13 @@ public class EventController {
 	@Autowired
 	private EventService service;
 	
-//	@PreAuthorize("hasAnyRole('ROLE_OPERATOR','ROLE_ADMIN')")
 	@GetMapping
 	public ResponseEntity<Page<EventDTO>> findAll(Pageable pageable) {
 		Page<EventDTO> list = service.findAll(pageable);		
 		return ResponseEntity.ok().body(list);
 	}
 	
-//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasAnyRole('ROLE_OPERATOR','ROLE_ADMIN')")
 	@PostMapping
 	public ResponseEntity<EventDTO> insert(@Valid @RequestBody EventDTO dto) {
 		dto = service.insert(dto);
